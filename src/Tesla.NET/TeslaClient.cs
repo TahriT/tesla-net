@@ -130,5 +130,107 @@ namespace Tesla.NET
 
             return Client.GetVehicleStateAsync(BaseUri, vehicleId, accessToken, cancellationToken);
         }
+
+        /// <inheritdoc />
+        public Task<IMessageResponse<IResponseDataWrapper<IVehicle>>> WakeUpAsync(long vehicleId, CancellationToken cancellationToken = default)
+        {
+            return Client.WakeUpAsync(BaseUri, vehicleId, cancellationToken: cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> StartAutoConditioning(long vehicleId, CancellationToken cancellationToken = default)
+        {
+            return Client.StartAutoConditioningAsync(BaseUri, vehicleId, cancellationToken: cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> StopAutoConditioning(long vehicleId, CancellationToken cancellationToken = default)
+        {
+            return Client.StopAutoConditioningAsync(BaseUri, vehicleId, cancellationToken: cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> SetTemps(long vehicleId, double driverTemp, double passengerTemp, CancellationToken cancellationToken = default)
+        {
+            return Client.SetTempsAsync(BaseUri, vehicleId, driverTemp, passengerTemp, cancellationToken: cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> SeatHeaterRequest(long vehicleId, int heater, int level, CancellationToken cancellationToken = default)
+        {
+            return Client.SeatHeaterRequestAsync(BaseUri, vehicleId, heater, level, cancellationToken: cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> SteeringWheelHeaterRequest(long vehicleId, bool on, CancellationToken cancellationToken = default)
+        {
+            return Client.SteeringWheelHeaterRequestAsync(BaseUri, vehicleId, on, cancellationToken: cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> ChargePortOpen(long vehicleId, CancellationToken cancellationToken = default)
+        {
+            return Client.ChargePortOpenAsync(BaseUri, vehicleId, cancellationToken: cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> ChargePortClose(long vehicleId, CancellationToken cancellationToken = default)
+        {
+            return Client.ChargePortCloseAsync(BaseUri, vehicleId, cancellationToken: cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> ChargeStart(long vehicleId, CancellationToken cancellationToken = default)
+        {
+            return Client.ChargeStartAsync(BaseUri, vehicleId, cancellationToken: cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> ChargeStop(long vehicleId, CancellationToken cancellationToken = default)
+        {
+            return Client.ChargeStopAsync(BaseUri, vehicleId, cancellationToken: cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> SetChargeLimit(long vehicleId, int percent, CancellationToken cancellationToken = default)
+        {
+            return Client.SetChargeLimitAsync(BaseUri, vehicleId, percent, cancellationToken: cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> DoorUnlock(long vehicleId, CancellationToken cancellationToken = default)
+        {
+            return Client.DoorUnlockAsync(BaseUri, vehicleId, cancellationToken: cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> DoorLock(long vehicleId, CancellationToken cancellationToken = default)
+        {
+            return Client.DoorLockAsync(BaseUri, vehicleId, cancellationToken: cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> ActuateTrunk(long vehicleId, string whichTrunk, CancellationToken cancellationToken = default)
+        {
+            return Client.ActuateTrunkAsync(BaseUri, vehicleId, whichTrunk, cancellationToken: cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> HonkHorn(long vehicleId, CancellationToken cancellationToken = default)
+        {
+            return Client.HonkHornAsync(BaseUri, vehicleId, cancellationToken: cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> FlashLights(long vehicleId, CancellationToken cancellationToken = default)
+        {
+            return Client.FlashLightsAsync(BaseUri, vehicleId, cancellationToken: cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> SunRoofControl(long vehicleId, string state, CancellationToken cancellationToken = default)
+        {
+            return Client.SunRoofControlAsync(BaseUri, vehicleId, state, cancellationToken: cancellationToken);
+        }
     }
 }

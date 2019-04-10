@@ -265,6 +265,538 @@ namespace Tesla.NET.Requests
         }
 
         /// <summary>
+        /// Wakes up the car from a sleeping state of the <see cref="IVehicle"/> with the specified
+        /// <see cref="IVehicle.Id"/>.
+        /// </summary>
+        /// <param name="client">The <see cref="HttpClient"/>.</param>
+        /// <param name="baseUri">The base <see cref="Uri"/> of the Tesla Owner API.</param>
+        /// <param name="vehicleId">The unique <see cref="IVehicle.Id"/> of a <see cref="IVehicle"/>.</param>
+        /// <param name="accessToken">
+        /// The access token used to authenticate the request; can be <see langword="null"/> if the authentication is
+        /// added by default.
+        /// </param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for a task to
+        /// complete.</param>
+        /// <returns>
+        /// The <see cref="IVehicle"/> with the specified <see cref="IVehicle.Id"/>.
+        /// </returns>
+        public static Task<IMessageResponse<IResponseDataWrapper<IVehicle>>> WakeUpAsync(
+            this HttpClient client,
+            Uri baseUri,
+            long vehicleId,
+            string accessToken = null,
+            CancellationToken cancellationToken = default)
+        {
+            if (client == null)
+                throw new ArgumentNullException(nameof(client));
+            if (baseUri == null)
+                throw new ArgumentNullException(nameof(baseUri));
+
+            Uri requestUri = new Uri(baseUri, $"api/1/vehicles/{vehicleId}/wake_up");
+
+            return
+                client
+                    .PostWithAuthAsync(requestUri, accessToken, cancellationToken)
+                    .ReadJsonAsAsync<IResponseDataWrapper<IVehicle>, ResponseDataWrapper<Vehicle>>(
+                        cancellationToken);
+        }
+
+        /// <summary>
+        /// Start the climate control (HVAC) system of the <see cref="IVehicle"/> with the specified
+        /// <see cref="IVehicle.Id"/>. Will cool or heat automatically, depending on set temperature.
+        /// </summary>
+        /// <param name="client">The <see cref="HttpClient"/>.</param>
+        /// <param name="baseUri">The base <see cref="Uri"/> of the Tesla Owner API.</param>
+        /// <param name="vehicleId">The unique <see cref="IVehicle.Id"/> of a <see cref="IVehicle"/>.</param>
+        /// <param name="accessToken">
+        /// The access token used to authenticate the request; can be <see langword="null"/> if the authentication is
+        /// added by default.
+        /// </param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for a task to
+        /// complete.</param>
+        /// <returns>
+        /// The <see cref="ICommandResult"/>.
+        /// </returns>
+        public static Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> StartAutoConditioningAsync(
+            this HttpClient client,
+            Uri baseUri,
+            long vehicleId,
+            string accessToken = null,
+            CancellationToken cancellationToken = default)
+        {
+            return ExecuteCommand(client, baseUri, vehicleId, "auto_conditioning_start", null, accessToken, cancellationToken);
+        }
+
+        /// <summary>
+        /// Stop the climate control (HVAC) system of the <see cref="IVehicle"/> with the specified
+        /// <see cref="IVehicle.Id"/>.
+        /// </summary>
+        /// <param name="client">The <see cref="HttpClient"/>.</param>
+        /// <param name="baseUri">The base <see cref="Uri"/> of the Tesla Owner API.</param>
+        /// <param name="vehicleId">The unique <see cref="IVehicle.Id"/> of a <see cref="IVehicle"/>.</param>
+        /// <param name="accessToken">
+        /// The access token used to authenticate the request; can be <see langword="null"/> if the authentication is
+        /// added by default.
+        /// </param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for a task to
+        /// complete.</param>
+        /// <returns>
+        /// The <see cref="ICommandResult"/>.
+        /// </returns>
+        public static Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> StopAutoConditioningAsync(
+            this HttpClient client,
+            Uri baseUri,
+            long vehicleId,
+            string accessToken = null,
+            CancellationToken cancellationToken = default)
+        {
+            return ExecuteCommand(client, baseUri, vehicleId, "auto_conditioning_stop", null, accessToken, cancellationToken);
+        }
+
+        /// <summary>
+        /// Sets the target temperature for the climate control (HVAC) system of the <see cref="IVehicle"/> with the specified
+        /// <see cref="IVehicle.Id"/>
+        /// Note: The parameters are always in celsius, regardless of the region the car is in or the display settings of the car.
+        /// </summary>
+        /// <param name="client">The <see cref="HttpClient"/>.</param>
+        /// <param name="baseUri">The base <see cref="Uri"/> of the Tesla Owner API.</param>
+        /// <param name="vehicleId">The unique <see cref="IVehicle.Id"/> of a <see cref="IVehicle"/>.</param>
+        /// <param name="driverTemp">The temperature in Celcius to set for the driver's side.</param>
+        /// <param name="passengerTemp">The temperature in Celcius to set for the passenger's side.</param>
+        /// <param name="accessToken">
+        /// The access token used to authenticate the request; can be <see langword="null"/> if the authentication is
+        /// added by default.
+        /// </param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for a task to
+        /// complete.</param>
+        /// <returns>
+        /// The <see cref="ICommandResult"/>.
+        /// </returns>
+        public static Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> SetTempsAsync(
+            this HttpClient client,
+            Uri baseUri,
+            long vehicleId,
+            double driverTemp,
+            double passengerTemp,
+            string accessToken = null,
+            CancellationToken cancellationToken = default)
+        {
+            IEnumerable<KeyValuePair<string, string>> parameters = GetRequestAccessTokenParameters();
+
+            return ExecuteCommand(client, baseUri, vehicleId, "set_temps", parameters, accessToken, cancellationToken);
+
+            IEnumerable<KeyValuePair<string, string>> GetRequestAccessTokenParameters()
+            {
+                yield return new KeyValuePair<string, string>("driver_temp", driverTemp.ToString());
+                yield return new KeyValuePair<string, string>("passenger_temp", passengerTemp.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Sets the specified seat's heater level of the <see cref="IVehicle"/> with the specified
+        /// <see cref="IVehicle.Id"/>
+        /// </summary>
+        /// <param name="client">The <see cref="HttpClient"/>.</param>
+        /// <param name="baseUri">The base <see cref="Uri"/> of the Tesla Owner API.</param>
+        /// <param name="vehicleId">The unique <see cref="IVehicle.Id"/> of a <see cref="IVehicle"/>.</param>
+        /// <param name="heater">The desired seat to heat. (0-5). 0=Driver,1=Passenger,2=Rear left,4=Rear center,5=Rear right</param>
+        /// <param name="level">The desired level for the heater. (0-3).</param>
+        /// <param name="accessToken">
+        /// The access token used to authenticate the request; can be <see langword="null"/> if the authentication is
+        /// added by default.
+        /// </param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for a task to
+        /// complete.</param>
+        /// <returns>
+        /// The <see cref="ICommandResult"/>.
+        /// </returns>
+        public static Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> SeatHeaterRequestAsync(
+            this HttpClient client,
+            Uri baseUri,
+            long vehicleId,
+            int heater,
+            int level,
+            string accessToken = null,
+            CancellationToken cancellationToken = default)
+        {
+            IEnumerable<KeyValuePair<string, string>> parameters = GetRequestAccessTokenParameters();
+
+            return ExecuteCommand(client, baseUri, vehicleId, "remote_seat_heater_request", parameters, accessToken, cancellationToken);
+
+            IEnumerable<KeyValuePair<string, string>> GetRequestAccessTokenParameters()
+            {
+                yield return new KeyValuePair<string, string>("heater", heater.ToString());
+                yield return new KeyValuePair<string, string>("level", level.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Turn steering wheel heater on or off of the <see cref="IVehicle"/> with the specified
+        /// <see cref="IVehicle.Id"/>
+        /// </summary>
+        /// <param name="client">The <see cref="HttpClient"/>.</param>
+        /// <param name="baseUri">The base <see cref="Uri"/> of the Tesla Owner API.</param>
+        /// <param name="vehicleId">The unique <see cref="IVehicle.Id"/> of a <see cref="IVehicle"/>.</param>
+        /// <param name="on">True to turn on, false to turn off.</param>
+        /// <param name="accessToken">
+        /// The access token used to authenticate the request; can be <see langword="null"/> if the authentication is
+        /// added by default.
+        /// </param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for a task to
+        /// complete.</param>
+        /// <returns>
+        /// The <see cref="ICommandResult"/>.
+        /// </returns>
+        public static Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> SteeringWheelHeaterRequestAsync(
+            this HttpClient client,
+            Uri baseUri,
+            long vehicleId,
+            bool on,
+            string accessToken = null,
+            CancellationToken cancellationToken = default)
+        {
+            IEnumerable<KeyValuePair<string, string>> parameters = GetRequestAccessTokenParameters();
+
+            return ExecuteCommand(client, baseUri, vehicleId, "remote_steering_wheel_heater_request", parameters, accessToken, cancellationToken);
+
+            IEnumerable<KeyValuePair<string, string>> GetRequestAccessTokenParameters()
+            {
+                yield return new KeyValuePair<string, string>("on", on.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Opens the charge port of the <see cref="IVehicle"/> with the specified
+        /// <see cref="IVehicle.Id"/>
+        /// </summary>
+        /// <param name="client">The <see cref="HttpClient"/>.</param>
+        /// <param name="baseUri">The base <see cref="Uri"/> of the Tesla Owner API.</param>
+        /// <param name="vehicleId">The unique <see cref="IVehicle.Id"/> of a <see cref="IVehicle"/>.</param>
+        /// <param name="accessToken">
+        /// The access token used to authenticate the request; can be <see langword="null"/> if the authentication is
+        /// added by default.
+        /// </param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for a task to
+        /// complete.</param>
+        /// <returns>
+        /// The <see cref="ICommandResult"/>.
+        /// </returns>
+        public static Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> ChargePortOpenAsync(
+            this HttpClient client,
+            Uri baseUri,
+            long vehicleId,
+            string accessToken = null,
+            CancellationToken cancellationToken = default)
+        {
+            return ExecuteCommand(client, baseUri, vehicleId, "charge_port_door_open", null, accessToken, cancellationToken);
+        }
+
+        /// <summary>
+        /// For vehicles with a motorized charge port, this closes it. For the <see cref="IVehicle"/> with the specified
+        /// <see cref="IVehicle.Id"/>
+        /// </summary>
+        /// <param name="client">The <see cref="HttpClient"/>.</param>
+        /// <param name="baseUri">The base <see cref="Uri"/> of the Tesla Owner API.</param>
+        /// <param name="vehicleId">The unique <see cref="IVehicle.Id"/> of a <see cref="IVehicle"/>.</param>
+        /// <param name="accessToken">
+        /// The access token used to authenticate the request; can be <see langword="null"/> if the authentication is
+        /// added by default.
+        /// </param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for a task to
+        /// complete.</param>
+        /// <returns>
+        /// The <see cref="ICommandResult"/>.
+        /// </returns>
+        public static Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> ChargePortCloseAsync(
+            this HttpClient client,
+            Uri baseUri,
+            long vehicleId,
+            string accessToken = null,
+            CancellationToken cancellationToken = default)
+        {
+            return ExecuteCommand(client, baseUri, vehicleId, "charge_port_door_close", null, accessToken, cancellationToken);
+        }
+
+        /// <summary>
+        /// If the car is plugged in but not currently charging, this will start charging the <see cref="IVehicle"/> with the specified
+        /// <see cref="IVehicle.Id"/>
+        /// </summary>
+        /// <param name="client">The <see cref="HttpClient"/>.</param>
+        /// <param name="baseUri">The base <see cref="Uri"/> of the Tesla Owner API.</param>
+        /// <param name="vehicleId">The unique <see cref="IVehicle.Id"/> of a <see cref="IVehicle"/>.</param>
+        /// <param name="accessToken">
+        /// The access token used to authenticate the request; can be <see langword="null"/> if the authentication is
+        /// added by default.
+        /// </param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for a task to
+        /// complete.</param>
+        /// <returns>
+        /// The <see cref="ICommandResult"/>.
+        /// </returns>
+        public static Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> ChargeStartAsync(
+            this HttpClient client,
+            Uri baseUri,
+            long vehicleId,
+            string accessToken = null,
+            CancellationToken cancellationToken = default)
+        {
+            return ExecuteCommand(client, baseUri, vehicleId, "charge_start", null, accessToken, cancellationToken);
+        }
+
+        /// <summary>
+        /// If the car is currently charging, this will stop charging the <see cref="IVehicle"/> with the specified
+        /// <see cref="IVehicle.Id"/>
+        /// </summary>
+        /// <param name="client">The <see cref="HttpClient"/>.</param>
+        /// <param name="baseUri">The base <see cref="Uri"/> of the Tesla Owner API.</param>
+        /// <param name="vehicleId">The unique <see cref="IVehicle.Id"/> of a <see cref="IVehicle"/>.</param>
+        /// <param name="accessToken">
+        /// The access token used to authenticate the request; can be <see langword="null"/> if the authentication is
+        /// added by default.
+        /// </param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for a task to
+        /// complete.</param>
+        /// <returns>
+        /// The <see cref="ICommandResult"/>.
+        /// </returns>
+        public static Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> ChargeStopAsync(
+            this HttpClient client,
+            Uri baseUri,
+            long vehicleId,
+            string accessToken = null,
+            CancellationToken cancellationToken = default)
+        {
+            return ExecuteCommand(client, baseUri, vehicleId, "charge_stop", null, accessToken, cancellationToken);
+        }
+
+        /// <summary>
+        /// Sets the charge limit to a custom value of the <see cref="IVehicle"/> with the specified
+        /// <see cref="IVehicle.Id"/>
+        /// </summary>
+        /// <param name="client">The <see cref="HttpClient"/>.</param>
+        /// <param name="baseUri">The base <see cref="Uri"/> of the Tesla Owner API.</param>
+        /// <param name="vehicleId">The unique <see cref="IVehicle.Id"/> of a <see cref="IVehicle"/>.</param>
+        /// <param name="percent">The percentage the battery will charge until.</param>
+        /// <param name="accessToken">
+        /// The access token used to authenticate the request; can be <see langword="null"/> if the authentication is
+        /// added by default.
+        /// </param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for a task to
+        /// complete.</param>
+        /// <returns>
+        /// The <see cref="ICommandResult"/>.
+        /// </returns>
+        public static Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> SetChargeLimitAsync(
+            this HttpClient client,
+            Uri baseUri,
+            long vehicleId,
+            int percent,
+            string accessToken = null,
+            CancellationToken cancellationToken = default)
+        {
+            IEnumerable<KeyValuePair<string, string>> parameters = GetRequestAccessTokenParameters();
+
+            return ExecuteCommand(client, baseUri, vehicleId, "set_charge_limit", parameters, accessToken, cancellationToken);
+
+            IEnumerable<KeyValuePair<string, string>> GetRequestAccessTokenParameters()
+            {
+                yield return new KeyValuePair<string, string>("percent", percent.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Unlocks the doors to the car of the <see cref="IVehicle"/> with the specified
+        /// <see cref="IVehicle.Id"/> Extends the handles on the S and X.
+        /// </summary>
+        /// <param name="client">The <see cref="HttpClient"/>.</param>
+        /// <param name="baseUri">The base <see cref="Uri"/> of the Tesla Owner API.</param>
+        /// <param name="vehicleId">The unique <see cref="IVehicle.Id"/> of a <see cref="IVehicle"/>.</param>
+        /// <param name="accessToken">
+        /// The access token used to authenticate the request; can be <see langword="null"/> if the authentication is
+        /// added by default.
+        /// </param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for a task to
+        /// complete.</param>
+        /// <returns>
+        /// The <see cref="ICommandResult"/>.
+        /// </returns>
+        public static Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> DoorUnlockAsync(
+            this HttpClient client,
+            Uri baseUri,
+            long vehicleId,
+            string accessToken = null,
+            CancellationToken cancellationToken = default)
+        {
+            return ExecuteCommand(client, baseUri, vehicleId, "door_unlock", null, accessToken, cancellationToken);
+        }
+
+        /// <summary>
+        /// Locks the doors to the car of the <see cref="IVehicle"/> with the specified
+        /// <see cref="IVehicle.Id"/> Retracts the handles on the S and X, if they are extended.
+        /// </summary>
+        /// <param name="client">The <see cref="HttpClient"/>.</param>
+        /// <param name="baseUri">The base <see cref="Uri"/> of the Tesla Owner API.</param>
+        /// <param name="vehicleId">The unique <see cref="IVehicle.Id"/> of a <see cref="IVehicle"/>.</param>
+        /// <param name="accessToken">
+        /// The access token used to authenticate the request; can be <see langword="null"/> if the authentication is
+        /// added by default.
+        /// </param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for a task to
+        /// complete.</param>
+        /// <returns>
+        /// The <see cref="ICommandResult"/>.
+        /// </returns>
+        public static Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> DoorLockAsync(
+            this HttpClient client,
+            Uri baseUri,
+            long vehicleId,
+            string accessToken = null,
+            CancellationToken cancellationToken = default)
+        {
+            return ExecuteCommand(client, baseUri, vehicleId, "door_lock", null, accessToken, cancellationToken);
+        }
+
+        /// <summary>
+        /// Opens either the front or rear trunk of the <see cref="IVehicle"/> with the specified
+        /// <see cref="IVehicle.Id"/> On the Model S and X, it will also close the rear trunk.
+        /// </summary>
+        /// <param name="client">The <see cref="HttpClient"/>.</param>
+        /// <param name="baseUri">The base <see cref="Uri"/> of the Tesla Owner API.</param>
+        /// <param name="vehicleId">The unique <see cref="IVehicle.Id"/> of a <see cref="IVehicle"/>.</param>
+        /// <param name="whichTrunk">Which trunk to open. Only valid options are "rear" and "front".</param>
+        /// <param name="accessToken">
+        /// The access token used to authenticate the request; can be <see langword="null"/> if the authentication is
+        /// added by default.
+        /// </param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for a task to
+        /// complete.</param>
+        /// <returns>
+        /// The <see cref="ICommandResult"/>.
+        /// </returns>
+        public static Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> ActuateTrunkAsync(
+            this HttpClient client,
+            Uri baseUri,
+            long vehicleId,
+            string whichTrunk,
+            string accessToken = null,
+            CancellationToken cancellationToken = default)
+        {
+            IEnumerable<KeyValuePair<string, string>> parameters = GetRequestAccessTokenParameters();
+
+            return ExecuteCommand(client, baseUri, vehicleId, "actuate_trunk", parameters, accessToken, cancellationToken);
+
+            IEnumerable<KeyValuePair<string, string>> GetRequestAccessTokenParameters()
+            {
+                yield return new KeyValuePair<string, string>("whichTrunk", whichTrunk);
+            }
+        }
+
+        /// <summary>
+        /// Honks the horn twice of the <see cref="IVehicle"/> with the specified
+        /// <see cref="IVehicle.Id"/>
+        /// </summary>
+        /// <param name="client">The <see cref="HttpClient"/>.</param>
+        /// <param name="baseUri">The base <see cref="Uri"/> of the Tesla Owner API.</param>
+        /// <param name="vehicleId">The unique <see cref="IVehicle.Id"/> of a <see cref="IVehicle"/>.</param>
+        /// <param name="accessToken">
+        /// The access token used to authenticate the request; can be <see langword="null"/> if the authentication is
+        /// added by default.
+        /// </param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for a task to
+        /// complete.</param>
+        /// <returns>
+        /// The <see cref="ICommandResult"/>.
+        /// </returns>
+        public static Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> HonkHornAsync(
+            this HttpClient client,
+            Uri baseUri,
+            long vehicleId,
+            string accessToken = null,
+            CancellationToken cancellationToken = default)
+        {
+            return ExecuteCommand(client, baseUri, vehicleId, "honk_horn", null, accessToken, cancellationToken);
+        }
+
+        /// <summary>
+        /// Flashes the headlights once of the <see cref="IVehicle"/> with the specified
+        /// <see cref="IVehicle.Id"/>
+        /// </summary>
+        /// <param name="client">The <see cref="HttpClient"/>.</param>
+        /// <param name="baseUri">The base <see cref="Uri"/> of the Tesla Owner API.</param>
+        /// <param name="vehicleId">The unique <see cref="IVehicle.Id"/> of a <see cref="IVehicle"/>.</param>
+        /// <param name="accessToken">
+        /// The access token used to authenticate the request; can be <see langword="null"/> if the authentication is
+        /// added by default.
+        /// </param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for a task to
+        /// complete.</param>
+        /// <returns>
+        /// The <see cref="ICommandResult"/>.
+        /// </returns>
+        public static Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> FlashLightsAsync(
+            this HttpClient client,
+            Uri baseUri,
+            long vehicleId,
+            string accessToken = null,
+            CancellationToken cancellationToken = default)
+        {
+            return ExecuteCommand(client, baseUri, vehicleId, "flash_lights", null, accessToken, cancellationToken);
+        }
+
+        /// <summary>
+        /// Controls the panoramic sunroof of the <see cref="IVehicle"/> with the specified
+        /// <see cref="IVehicle.Id"/>. This only works on Model S.
+        /// </summary>
+        /// <param name="client">The <see cref="HttpClient"/>.</param>
+        /// <param name="baseUri">The base <see cref="Uri"/> of the Tesla Owner API.</param>
+        /// <param name="vehicleId">The unique <see cref="IVehicle.Id"/> of a <see cref="IVehicle"/>.</param>
+        /// <param name="state">The amount to open the sunroof. Currently this only allows the values "vent" and "close".</param>
+        /// <param name="accessToken">
+        /// The access token used to authenticate the request; can be <see langword="null"/> if the authentication is
+        /// added by default.
+        /// </param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for a task to
+        /// complete.</param>
+        /// <returns>
+        /// The <see cref="ICommandResult"/>.
+        /// </returns>
+        public static Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> SunRoofControlAsync(
+            this HttpClient client,
+            Uri baseUri,
+            long vehicleId,
+            string state,
+            string accessToken = null,
+            CancellationToken cancellationToken = default)
+        {
+            IEnumerable<KeyValuePair<string, string>> parameters = GetRequestAccessTokenParameters();
+
+            return ExecuteCommand(client, baseUri, vehicleId, "sun_roof_control", parameters, accessToken, cancellationToken);
+
+            IEnumerable<KeyValuePair<string, string>> GetRequestAccessTokenParameters()
+            {
+                yield return new KeyValuePair<string, string>("state", state);
+            }
+        }
+
+        private static Task<IMessageResponse<IResponseDataWrapper<ICommandResult>>> ExecuteCommand(
+            this HttpClient client,
+            Uri baseUri,
+            long vehicleId,
+            string commandPath,
+            IEnumerable<KeyValuePair<string, string>> parameters,
+            string accessToken = null,
+            CancellationToken cancellationToken = default)
+        {
+            Uri requestUri = new Uri(baseUri, $"api/1/vehicles/{vehicleId}/command/{commandPath}");
+
+            return
+                client
+                    .PostWithAuthAsync(requestUri, accessToken, cancellationToken)
+                    .ReadJsonAsAsync<IResponseDataWrapper<ICommandResult>, ResponseDataWrapper<CommandResult>>(
+                        cancellationToken);
+        }
+
+        /// <summary>
         /// Posts the form <paramref name="parameters"/> to the <paramref name="requestUri"/>.
         /// </summary>
         /// <param name="client">The <see cref="HttpClient"/>.</param>
@@ -319,12 +851,58 @@ namespace Tesla.NET.Requests
             string accessToken = null,
             CancellationToken cancellationToken = default)
         {
+            return await RequestWithAuthAsync(client, requestUri, HttpMethod.Get, accessToken, cancellationToken);
+        }
+
+        /// <summary>
+        /// Sends a <see cref="HttpMethod.Post"/> request to the <paramref name="requestUri"/> authenticated using the
+        /// <paramref name="accessToken"/>.
+        /// </summary>
+        /// <param name="client">The <see cref="HttpClient"/>.</param>
+        /// <param name="requestUri">The request <see cref="Uri"/>.</param>
+        /// <param name="accessToken">
+        /// The access token used to authenticate the request; can be <see langword="null"/> if the authentication is
+        /// added by default.
+        /// </param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for a task to
+        /// complete.</param>
+        /// <returns>The <see cref="HttpResponseMessage"/> to the request.</returns>
+        private static async Task<HttpResponseMessage> PostWithAuthAsync(
+            this HttpClient client,
+            Uri requestUri,
+            string accessToken = null,
+            CancellationToken cancellationToken = default)
+        {
+            return await RequestWithAuthAsync(client, requestUri, HttpMethod.Post, accessToken, cancellationToken);
+        }
+
+        /// <summary>
+        /// Sends an HTTP request to the <paramref name="requestUri"/> authenticated using the
+        /// <paramref name="accessToken"/>.
+        /// </summary>
+        /// <param name="client">The <see cref="HttpClient"/>.</param>
+        /// <param name="requestUri">The request <see cref="Uri"/>.</param>
+        /// <param name="method">The <see cref="HttpMethod"/> for the request</param>
+        /// <param name="accessToken">
+        /// The access token used to authenticate the request; can be <see langword="null"/> if the authentication is
+        /// added by default.
+        /// </param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for a task to
+        /// complete.</param>
+        /// <returns>The <see cref="HttpResponseMessage"/> to the request.</returns>
+        private static async Task<HttpResponseMessage> RequestWithAuthAsync(
+            this HttpClient client,
+            Uri requestUri,
+            HttpMethod method,
+            string accessToken = null,
+            CancellationToken cancellationToken = default)
+        {
             if (client == null)
                 throw new ArgumentNullException(nameof(client));
             if (requestUri == null)
                 throw new ArgumentNullException(nameof(requestUri));
 
-            var requestMessage = new HttpRequestMessage(HttpMethod.Get, requestUri);
+            var requestMessage = new HttpRequestMessage(method, requestUri);
             if (!string.IsNullOrWhiteSpace(accessToken))
             {
                 requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
