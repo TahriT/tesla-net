@@ -199,10 +199,10 @@ namespace Tesla.NET
 
         /// <summary>
         /// Sets the specified seat's heater level of the <see cref="IVehicle"/> with the specified
-        /// <see cref="IVehicle.Id"/>
+        /// <see cref="IVehicle.Id"/>.
         /// </summary>
         /// <param name="vehicleId">The unique <see cref="IVehicle.Id"/> of a <see cref="IVehicle"/>.</param>
-        /// <param name="heater">The desired seat to heat. (0-5). 0=Driver,1=Passenger,2=Rear left,4=Rear center,5=Rear right</param>
+        /// <param name="heater">The desired seat to heat. (0-5). 0=Driver,1=Passenger,2=Rear left,4=Rear center,5=Rear right.</param>
         /// <param name="level">The desired level for the heater. (0-3).</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for a task to
         /// complete.</param>
@@ -217,7 +217,7 @@ namespace Tesla.NET
 
         /// <summary>
         /// Turn steering wheel heater on or off of the <see cref="IVehicle"/> with the specified
-        /// <see cref="IVehicle.Id"/>
+        /// <see cref="IVehicle.Id"/>.
         /// </summary>
         /// <param name="vehicleId">The unique <see cref="IVehicle.Id"/> of a <see cref="IVehicle"/>.</param>
         /// <param name="on">True to turn on, false to turn off.</param>
@@ -233,7 +233,7 @@ namespace Tesla.NET
 
         /// <summary>
         /// Opens the charge port of the <see cref="IVehicle"/> with the specified
-        /// <see cref="IVehicle.Id"/>
+        /// <see cref="IVehicle.Id"/>.
         /// </summary>
         /// <param name="vehicleId">The unique <see cref="IVehicle.Id"/> of a <see cref="IVehicle"/>.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for a task to
@@ -247,7 +247,7 @@ namespace Tesla.NET
 
         /// <summary>
         /// For vehicles with a motorized charge port, this closes it. For the <see cref="IVehicle"/> with the specified
-        /// <see cref="IVehicle.Id"/>
+        /// <see cref="IVehicle.Id"/>.
         /// </summary>
         /// <param name="vehicleId">The unique <see cref="IVehicle.Id"/> of a <see cref="IVehicle"/>.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for a task to
@@ -261,7 +261,7 @@ namespace Tesla.NET
 
         /// <summary>
         /// If the car is plugged in but not currently charging, this will start charging the <see cref="IVehicle"/> with the specified
-        /// <see cref="IVehicle.Id"/>
+        /// <see cref="IVehicle.Id"/>.
         /// </summary>
         /// <param name="vehicleId">The unique <see cref="IVehicle.Id"/> of a <see cref="IVehicle"/>.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for a task to
@@ -275,7 +275,7 @@ namespace Tesla.NET
 
         /// <summary>
         /// If the car is currently charging, this will stop charging the <see cref="IVehicle"/> with the specified
-        /// <see cref="IVehicle.Id"/>
+        /// <see cref="IVehicle.Id"/>.
         /// </summary>
         /// <param name="vehicleId">The unique <see cref="IVehicle.Id"/> of a <see cref="IVehicle"/>.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for a task to
@@ -289,7 +289,7 @@ namespace Tesla.NET
 
         /// <summary>
         /// Sets the charge limit to a custom value of the <see cref="IVehicle"/> with the specified
-        /// <see cref="IVehicle.Id"/>
+        /// <see cref="IVehicle.Id"/>.
         /// </summary>
         /// <param name="vehicleId">The unique <see cref="IVehicle.Id"/> of a <see cref="IVehicle"/>.</param>
         /// <param name="percent">The percentage the battery will charge until.</param>
@@ -349,7 +349,7 @@ namespace Tesla.NET
 
         /// <summary>
         /// Honks the horn twice of the <see cref="IVehicle"/> with the specified
-        /// <see cref="IVehicle.Id"/>
+        /// <see cref="IVehicle.Id"/>.
         /// </summary>
         /// <param name="vehicleId">The unique <see cref="IVehicle.Id"/> of a <see cref="IVehicle"/>.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for a task to
@@ -363,7 +363,7 @@ namespace Tesla.NET
 
         /// <summary>
         /// Flashes the headlights once of the <see cref="IVehicle"/> with the specified
-        /// <see cref="IVehicle.Id"/>
+        /// <see cref="IVehicle.Id"/>.
         /// </summary>
         /// <param name="vehicleId">The unique <see cref="IVehicle.Id"/> of a <see cref="IVehicle"/>.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for a task to

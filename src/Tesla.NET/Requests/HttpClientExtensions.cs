@@ -394,12 +394,12 @@ namespace Tesla.NET.Requests
 
         /// <summary>
         /// Sets the specified seat's heater level of the <see cref="IVehicle"/> with the specified
-        /// <see cref="IVehicle.Id"/>
+        /// <see cref="IVehicle.Id"/>.
         /// </summary>
         /// <param name="client">The <see cref="HttpClient"/>.</param>
         /// <param name="baseUri">The base <see cref="Uri"/> of the Tesla Owner API.</param>
         /// <param name="vehicleId">The unique <see cref="IVehicle.Id"/> of a <see cref="IVehicle"/>.</param>
-        /// <param name="heater">The desired seat to heat. (0-5). 0=Driver,1=Passenger,2=Rear left,4=Rear center,5=Rear right</param>
+        /// <param name="heater">The desired seat to heat. (0-5). 0=Driver,1=Passenger,2=Rear left,4=Rear center,5=Rear right.</param>
         /// <param name="level">The desired level for the heater. (0-3).</param>
         /// <param name="accessToken">
         /// The access token used to authenticate the request; can be <see langword="null"/> if the authentication is
@@ -432,7 +432,7 @@ namespace Tesla.NET.Requests
 
         /// <summary>
         /// Turn steering wheel heater on or off of the <see cref="IVehicle"/> with the specified
-        /// <see cref="IVehicle.Id"/>
+        /// <see cref="IVehicle.Id"/>.
         /// </summary>
         /// <param name="client">The <see cref="HttpClient"/>.</param>
         /// <param name="baseUri">The base <see cref="Uri"/> of the Tesla Owner API.</param>
@@ -467,7 +467,7 @@ namespace Tesla.NET.Requests
 
         /// <summary>
         /// Opens the charge port of the <see cref="IVehicle"/> with the specified
-        /// <see cref="IVehicle.Id"/>
+        /// <see cref="IVehicle.Id"/>.
         /// </summary>
         /// <param name="client">The <see cref="HttpClient"/>.</param>
         /// <param name="baseUri">The base <see cref="Uri"/> of the Tesla Owner API.</param>
@@ -493,7 +493,7 @@ namespace Tesla.NET.Requests
 
         /// <summary>
         /// For vehicles with a motorized charge port, this closes it. For the <see cref="IVehicle"/> with the specified
-        /// <see cref="IVehicle.Id"/>
+        /// <see cref="IVehicle.Id"/>.
         /// </summary>
         /// <param name="client">The <see cref="HttpClient"/>.</param>
         /// <param name="baseUri">The base <see cref="Uri"/> of the Tesla Owner API.</param>
@@ -519,7 +519,7 @@ namespace Tesla.NET.Requests
 
         /// <summary>
         /// If the car is plugged in but not currently charging, this will start charging the <see cref="IVehicle"/> with the specified
-        /// <see cref="IVehicle.Id"/>
+        /// <see cref="IVehicle.Id"/>.
         /// </summary>
         /// <param name="client">The <see cref="HttpClient"/>.</param>
         /// <param name="baseUri">The base <see cref="Uri"/> of the Tesla Owner API.</param>
@@ -545,7 +545,7 @@ namespace Tesla.NET.Requests
 
         /// <summary>
         /// If the car is currently charging, this will stop charging the <see cref="IVehicle"/> with the specified
-        /// <see cref="IVehicle.Id"/>
+        /// <see cref="IVehicle.Id"/>.
         /// </summary>
         /// <param name="client">The <see cref="HttpClient"/>.</param>
         /// <param name="baseUri">The base <see cref="Uri"/> of the Tesla Owner API.</param>
@@ -571,7 +571,7 @@ namespace Tesla.NET.Requests
 
         /// <summary>
         /// Sets the charge limit to a custom value of the <see cref="IVehicle"/> with the specified
-        /// <see cref="IVehicle.Id"/>
+        /// <see cref="IVehicle.Id"/>.
         /// </summary>
         /// <param name="client">The <see cref="HttpClient"/>.</param>
         /// <param name="baseUri">The base <see cref="Uri"/> of the Tesla Owner API.</param>
@@ -693,7 +693,7 @@ namespace Tesla.NET.Requests
 
         /// <summary>
         /// Honks the horn twice of the <see cref="IVehicle"/> with the specified
-        /// <see cref="IVehicle.Id"/>
+        /// <see cref="IVehicle.Id"/>.
         /// </summary>
         /// <param name="client">The <see cref="HttpClient"/>.</param>
         /// <param name="baseUri">The base <see cref="Uri"/> of the Tesla Owner API.</param>
@@ -719,7 +719,7 @@ namespace Tesla.NET.Requests
 
         /// <summary>
         /// Flashes the headlights once of the <see cref="IVehicle"/> with the specified
-        /// <see cref="IVehicle.Id"/>
+        /// <see cref="IVehicle.Id"/>.
         /// </summary>
         /// <param name="client">The <see cref="HttpClient"/>.</param>
         /// <param name="baseUri">The base <see cref="Uri"/> of the Tesla Owner API.</param>
@@ -882,7 +882,7 @@ namespace Tesla.NET.Requests
         /// </summary>
         /// <param name="client">The <see cref="HttpClient"/>.</param>
         /// <param name="requestUri">The request <see cref="Uri"/>.</param>
-        /// <param name="method">The <see cref="HttpMethod"/> for the request</param>
+        /// <param name="method">The <see cref="HttpMethod"/> for the request.</param>
         /// <param name="accessToken">
         /// The access token used to authenticate the request; can be <see langword="null"/> if the authentication is
         /// added by default.
